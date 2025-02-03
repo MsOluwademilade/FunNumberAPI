@@ -17,21 +17,24 @@ The Number Classification API was built using Flask in Python. It classifies a n
 #### 🏗 Deployment to EC2
 **1. Launch EC2 Instance**
 - Start an Ubuntu EC2 instance
-- Open inbound rules for ports 22, 80, and 5000
+- Open inbound rules for ports 22(SSH), 80(HTTP), and 5000(Custom TCP)
+- Connect to your EC2 instance
 
-**2. Set Up Environment**
+**2. Set Up Environment on EC2**
 ```
-  sudo apt update && sudo apt upgrade -y
-  sudo apt install python3-pip nginx -y
-  python3 -m venv .venv
-  source .venv/bin/activate
-  pip install flask gunicorn flask_cors requests
+  sudo apt update && sudo apt upgrade -y #Update the System
+  sudo apt install python3-pip nginx -y #Install Python and Pip
+  python3 -m venv .venv #Create virtual environment
+  source .venv/bin/activate #Activate virtual environment
+  pip install flask gunicorn flask_cors requests # Install Flask and Required Dependencies
 ```
 **3. Clone & Run the App**
 ```
   git clone https://github.com/yourusername/FunNumberAPI.git
   cd FunNumberAPI
-  gunicorn --workers 3 --bind 127.0.0.1:5000 app:app
+  python3 app.py
+
+ 
 ```
 **4. Set Up Systemd Service**
 ```
