@@ -156,6 +156,3 @@ Feel free to fork this repo, make improvements, and submit a PR! 🛠️
 - Flask for making Python APIs a breeze 🍃
 - [Numbers API]( http://numbersapi.com) for the fun facts 🔢
 - You, for checking out this project! 🎉
-
-## 📜 License
-This project is licensed under the MIT License. Feel free to use and modify! 😃
