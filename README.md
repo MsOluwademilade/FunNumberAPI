@@ -15,12 +15,12 @@ The Number Classification API was built using Flask in Python. It classifies a n
 
 ## 🚀 Deployment & Hosting
 #### 🏗 Deployment to EC2
-**1. Launch EC2 Instance**
+**Step 1: Launch EC2 Instance**
 - Start an Ubuntu EC2 instance
 - Open inbound rules for ports 22(SSH), 80(HTTP), and 5000(Custom TCP)
 - Connect to your EC2 instance
 
-**2. Set Up Environment on EC2**
+**Step 2: Set Up Environment on EC2**
 ```
   sudo apt update && sudo apt upgrade -y #Update the System
   sudo apt install python3-pip nginx -y #Install Python and Pip
@@ -28,41 +28,62 @@ The Number Classification API was built using Flask in Python. It classifies a n
   source .venv/bin/activate #Activate virtual environment
   pip install flask gunicorn flask_cors requests # Install Flask and Required Dependencies
 ```
-**3. Clone & Run the App**
+**Step 3: Clone & Run the App**
 ```
   git clone https://github.com/yourusername/FunNumberAPI.git
   cd FunNumberAPI
   python3 app.py
-
- 
 ```
-**4. Set Up Systemd Service**
-```
-  sudo nano /etc/systemd/system/flask-app.service
-```
-Paste this:
-```
-[Unit]
-Description=Gunicorn instance to serve Flask app
-After=network.target
-
-[Service]
-User=ubuntu
-WorkingDirectory=/home/ubuntu/FunNumberAPI
-ExecStart=/home/ubuntu/.venv/bin/gunicorn --workers 3 --bind 127.0.0.1:5000 app:app
-Restart=always
-
-[Install]
-WantedBy=multi-user.target
-```
-
-Then run:
+**Step 4. Deploy the Flask App with Gunicorn**
+1. **Run the App with Gunicorn**:
+   - Use Gunicorn to serve your Flask app:
+      ```
+      gunicorn --bind 0.0.0.0:5000 app:app
+      ```
+     Replace app:app with the name of your Flask app file and app instance (e.g., if your file is app.py and the Flask app is named app, use app:app)
+2. **Test the App**:
+   - Open a browser and go to http://<public-ip-of-ec2>:5000/api/classify-number?number=371.
+   - You should see the JSON response from your API.
+**Step 5: Set Up Systemd Service**:
+1. **Create a Systemd Service File**
+   To ensure your Flask app runs continuously and starts on boot, set up a systemd service.
+    ```
+      sudo nano /etc/systemd/system/flask-app.service
+    ```
+2. **Paste this**
+    ```
+    [Unit]
+    Description=Gunicorn instance to serve Flask app
+    After=network.target
+    
+    [Service]
+    User=ubuntu
+    WorkingDirectory=/home/ubuntu/FunNumberAPI
+    ExecStart=/home/ubuntu/.venv/bin/gunicorn --workers 3 --bind 127.0.0.1:5000 app:app
+    Restart=always
+    
+    [Install]
+    WantedBy=multi-user.target
+    ```
+    Then save with 'Ctrl+X' then y and enter
+3. **Reload Systemd and Start the Service** 
 ```
   sudo systemctl daemon-reload
   sudo systemctl start flask-app
   sudo systemctl enable flask-app
 ```
-**5. Configure Nginx**
+4. **Check Status**
+    ```
+    sudo systemctl status flask-app
+    ``` 
+**Step 5. Set Up Nginx as a Reverse Proxy**
+To make your app accessible on port 80 (HTTP) and improve performance, set up Nginx as a reverse proxy.
+1. **Install NGINX**
+    ```
+    sudo apt install nginx -y
+   ```
+2. **Configure NGINX**
+- Edit the default Nginx configuration file:
 ```
   sudo nano /etc/nginx/sites-available/default
 ```
@@ -81,18 +102,15 @@ server {
     }
 }
 ```
-Then run:
-```
-  sudo nginx -t
-  sudo systemctl restart nginx
-```
-**6. Test the API! 🎉**
-
-Go to:
-```
-http://<public-ip-of-ec2>/api/classify-number?number=371
-```
-
+3. **Test and Restart NGINX**
+    ```
+      sudo nginx -t
+      sudo systemctl restart nginx
+    ```
+4. **Test the App**
+   - Open a browser and go to http://<public-ip-of-ec2>/api/classify-number?number=371.
+   - You should see the JSON response from your API.
+     
 ## 📡 API Usage
 
 🔹 Endpoint:
