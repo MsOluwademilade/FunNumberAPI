@@ -80,7 +80,7 @@ def get_number_properties(num):
     """Gets all the properties of a number."""
     properties = []
 
-    if is_armstrong(num):
+    if is_armstrong(abs(num)):
         properties.append("armstrong")
 
     properties.append("even" if num % 2 == 0 else "odd")
@@ -97,12 +97,12 @@ def get_fun_fact(num):
         fun_fact = response.text
 
         # Add custom fun fact for Armstrong numbers
-        if is_armstrong(num):
+        if is_armstrong(abs(num)):
             digit_expressions = []
-            power = len(str(num))  # Number of digits
-            for digit in str(num):
+            power = len(str(abs(num)))  # Number of digits
+            for digit in str(abs(num)):
                 digit_expressions.append(f"{digit}^{power}")
-            armstrong_fact = f"{num} is an Armstrong number because " + " + ".join(digit_expressions) + f" = {num}"
+            armstrong_fact = f"{num} is an Armstrong number because " + " + ".join(digit_expressions) + f" = {abs(num)}"
 
             # Combine the API fun fact with the Armstrong fact
             if armstrong_fact not in fun_fact:
@@ -126,10 +126,6 @@ def validate_number(num):
 
     if not num.lstrip('-').isdigit():
         return False, "Input must be a valid integer"
-
-    # If the number is negative, we don't want to process it as an Armstrong number
-    if int(num) < 0:
-        return False, f"{num} is a boring number"
 
     return True, None
 
