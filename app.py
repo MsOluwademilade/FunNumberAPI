@@ -26,12 +26,14 @@ def is_armstrong(num):
     An Armstrong number is one where the sum of its digits raised to the power 
     of the total number of digits equals the number itself.
     """
-    str_num = str(num)
+    # CHANGED: Use absolute value for Armstrong number check
+    abs_num = abs(num)
+    str_num = str(abs_num)
     power = len(str_num)
     total = 0
-    for digit in str(num):
+    for digit in str_num:
         total += int(digit) ** power
-    return num == total
+    return abs_num == total
 
 
 @lru_cache(maxsize=1000)
@@ -40,14 +42,16 @@ def is_prime(num):
     Check if a number is prime.
     A prime number is only divisible by 1 and itself.
     """
-    if num < 2:
+    # CHANGED: Use absolute value for prime check
+    abs_num = abs(num)
+    if abs_num < 2:
         return False
-    if num == 2:
+    if abs_num == 2:
         return True
-    if num % 2 == 0:
+    if abs_num % 2 == 0:
         return False
-    for i in range(3, int(math.sqrt(num)) + 1, 2):
-        if num % i == 0:
+    for i in range(3, int(math.sqrt(abs_num)) + 1, 2):
+        if abs_num % i == 0:
             return False
     return True
 
@@ -58,20 +62,24 @@ def is_perfect(num):
     Check if a number is perfect.
     A perfect number equals the sum of its proper divisors.
     """
-    if num < 1:
+    # CHANGED: Use absolute value for perfect number check
+    abs_num = abs(num)
+    if abs_num < 1:
         return False
     sum_of_divisor = 0
-    for i in range(1, num):
-        if num % i == 0:
+    for i in range(1, abs_num):
+        if abs_num % i == 0:
             sum_of_divisor += i
-    return num == sum_of_divisor
+    return abs_num == sum_of_divisor
 
 
 @lru_cache(maxsize=1000)
 def get_digit_sum(num):
     """Calculate the sum of digits in the number."""
+    # CHANGED: Use absolute value and handle digit sum for all numbers
+    abs_num = abs(num)
     digit_sum = 0
-    for digit in str(num):
+    for digit in str(abs_num):
         digit_sum += int(digit)
     return digit_sum
 
@@ -80,7 +88,9 @@ def get_number_properties(num):
     """Gets all the properties of a number."""
     properties = []
 
-    if is_armstrong(abs(num)):
+    # CHANGED: Check Armstrong number only for positive numbers
+    abs_num = abs(num)
+    if is_armstrong(abs_num) and num >= 0:
         properties.append("armstrong")
 
     properties.append("even" if num % 2 == 0 else "odd")
@@ -90,6 +100,10 @@ def get_number_properties(num):
 
 def get_fun_fact(num):
     """Get a fun fact about the number from the Numbers API."""
+    # CHANGED: Handle fun facts for negative numbers
+    if num < 0:
+        return f"{num} is an unremarkable number."
+
     try:
         # Fetch fun fact from the Numbers API
         response = requests.get(f"{NUMBERS_API_BASE_URL}/{num}/math", timeout=2)
@@ -97,12 +111,12 @@ def get_fun_fact(num):
         fun_fact = response.text
 
         # Add custom fun fact for Armstrong numbers
-        if is_armstrong(abs(num)):
+        if is_armstrong(num):
             digit_expressions = []
-            power = len(str(abs(num)))  # Number of digits
-            for digit in str(abs(num)):
+            power = len(str(num))  # Number of digits
+            for digit in str(num):
                 digit_expressions.append(f"{digit}^{power}")
-            armstrong_fact = f"{num} is an Armstrong number because " + " + ".join(digit_expressions) + f" = {abs(num)}"
+            armstrong_fact = f"{num} is an Armstrong number because " + " + ".join(digit_expressions) + f" = {num}"
 
             # Combine the API fun fact with the Armstrong fact
             if armstrong_fact not in fun_fact:
@@ -121,6 +135,7 @@ def validate_number(num):
     Validate the input number.
     Returns tuple of (is_valid, error_message)
     """
+    # CHANGED: Remove previous negative number restriction
     if not num:
         return False, "Number parameter is required"
 
