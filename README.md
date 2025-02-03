@@ -13,16 +13,13 @@ The Number Classification API was built using Flask in Python. It classifies a n
 - ✅ Supports CORS for cross-origin requests
 - ✅ Designed for fast response times (<500ms)
 
-```
-
-```
 ## 🚀 Deployment & Hosting
 #### 🏗 Deployment to EC2
-1. Launch EC2 Instance
+**1. Launch EC2 Instance**
 - Start an Ubuntu EC2 instance
 - Open inbound rules for ports 22, 80, and 5000
 
-2. Set Up Environment
+**2. Set Up Environment**
 ```
   sudo apt update && sudo apt upgrade -y
   sudo apt install python3-pip nginx -y
@@ -30,13 +27,13 @@ The Number Classification API was built using Flask in Python. It classifies a n
   source .venv/bin/activate
   pip install flask gunicorn flask_cors requests
 ```
-3. Clone & Run the App
+**3. Clone & Run the App**
 ```
   git clone https://github.com/yourusername/FunNumberAPI.git
   cd FunNumberAPI
   gunicorn --workers 3 --bind 127.0.0.1:5000 app:app
 ```
-4. Set Up Systemd Service
+**4. Set Up Systemd Service**
 ```
   sudo nano /etc/systemd/system/flask-app.service
 ```
@@ -62,7 +59,7 @@ Then run:
   sudo systemctl start flask-app
   sudo systemctl enable flask-app
 ```
-5. Configure Nginx
+**5. Configure Nginx**
 ```
   sudo nano /etc/nginx/sites-available/default
 ```
@@ -86,7 +83,7 @@ Then run:
   sudo nginx -t
   sudo systemctl restart nginx
 ```
-6. Test the API! 🎉
+**6. Test the API! 🎉**
 
 Go to:
 ```
