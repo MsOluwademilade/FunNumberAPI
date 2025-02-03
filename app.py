@@ -29,7 +29,7 @@ def is_armstrong(num):
     str_num = str(num)
     power = len(str_num)
     total = 0
-    for digit in num:
+    for digit in str(num):
         total += int(digit) ** power
     return num == total
 
@@ -106,7 +106,7 @@ def get_fun_fact(num):
 
             # Combine the API fun fact with the Armstrong fact
             if armstrong_fact not in fun_fact:
-                fun_fact = f"{fun_fact}. Also, {armstrong_fact}"
+                fun_fact = f"{fun_fact} Also, {armstrong_fact}"
 
         return fun_fact
 
